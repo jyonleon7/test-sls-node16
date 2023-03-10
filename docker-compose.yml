@@ -11,7 +11,7 @@ services:
     tty: true
     stdin_open: true
     volumes:
-      - ./deploy:/usr/app
+      - ./deploy:/app
     environment:
       - AWS_DEFAULT_REGION=ap-northeast-1
     ports:

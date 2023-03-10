@@ -1,0 +1,47 @@
+version: "3"
+
+services:
+  sls-deploy:
+    build:
+      context: ./
+      dockerfile: ./docker/serverless/Dockerfile
+      args:
+        - AWS_DEFAULT_REGION=ap-northeast-1
+        - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+        - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./deploy:/usr/app
+    environment:
+      - AWS_DEFAULT_REGION=ap-northeast-1
+    ports:
+      - 5000:5000
+
+  # crawl:
+  #   build:
+  #     dockerfile: ./docker/serverless/Dockerfile
+  #   volumes:
+  #     - ./deploy/src/node:/var/task
+  #     # ↓ nodejs/node_modules
+  #     # - ./layer:/opt
+  #   ports:
+  #     - 8080:8080
+  #   depends_on:
+  #     - minio
+
+  # minio:
+  #   image: minio/minio:RELEASE.2021-11-03T03-36-36Z
+  #   ports:
+  #     - 9000:9000
+  #     - 9001:9001
+  #   volumes:
+  #     - ./minio:/export
+  #   environment:
+  #     - MINIO_ACCESS_KEY=test
+  #     - MINIO_SECRET_KEY=password
+  #   command: ['server', '/export', '--console-address', ':9001']
+  #   networks:
+  #     default:
+  #       aliases:
+  #         - minio.dbg

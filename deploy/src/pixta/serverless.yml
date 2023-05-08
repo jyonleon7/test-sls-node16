@@ -1,0 +1,49 @@
+service: new-imageautomation-pixta
+
+frameworkVersion: '3'
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  stage: ${opt:stage, self:custom.defaultStage}
+  region: ap-northeast-1
+  logRetentionInDays: 3
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - s3:*
+          Resource:
+            - arn:aws:s3:::new-imageautomation-*
+plugins:
+  - serverless-layers
+
+package:
+  patterns:
+    - '!package*'
+    - '!Dockerfile'
+
+custom:
+  defaultStage: dev
+  serverless-layers:
+    layersDeploymentBucket: new-imageautomation-layers-${self:provider.stage}
+
+functions:
+  node:
+    handler: ./pixta.handler
+    timeout: 600
+    runtime: nodejs16.x
+    memorySize: 1024
+    environment:
+      NODE_ENV: ${self:provider.stage}
+      SLACK_ACCESS_TOKEN: ${env:SLACK_ACCESS_TOKEN}
+      CHANNEL_ID: ${env:CHANNEL_ID}
+      BUCKET_NAME: ${env:BUCKET_NAME}-${self:provider.stage}
+      LOG_LOCATION: ${env:LOG_LOCATION}
+      ZIP_FILE_NAME: ${env:ZIP_FILE_NAME}
+      PIXTA_USERNAME: ${env:PIXTA_USERNAME}
+      PIXTA_PASSWORD: ${env:PIXTA_PASSWORD}
+      PIXTA_SITEKEY: ${env:PIXTA_SITEKEY}
+      CAPTCHA_APIKEY: ${env:CAPTCHA_APIKEY}

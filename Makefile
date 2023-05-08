@@ -1,4 +1,4 @@
-install:
-	echo "各々のパッケージをインストールし、環境を整えたい"
+TARGETS := $(CURDIR)/deploy $(CURDIR)/deploy/src/pixta $(CURDIR)/deploy/src/shutterstock
 
-.PHONY: install
+preinstall:
+	@$(foreach dir,$(TARGETS),cd $(dir) && npm install;)

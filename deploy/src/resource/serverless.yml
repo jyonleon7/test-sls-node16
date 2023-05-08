@@ -1,0 +1,24 @@
+service: new-imageautomation-s3
+
+frameworkVersion: '3'
+useDotenv: true
+
+provider:
+  name: aws
+  stage: ${opt:stage, self:custom.defaultStage}
+  region: ap-northeast-1
+  logRetentionInDays: 3
+
+custom:
+  defaultStage: dev
+
+resources:
+  Resources:
+    Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: new-imageautomation-store-${self:provider.stage}
+    LayerBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: new-imageautomation-layers-${self:provider.stage}

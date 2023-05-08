@@ -4,43 +4,111 @@ services:
   sls-deploy:
     build:
       context: ./
-      dockerfile: ./docker/serverless/Dockerfile
+      dockerfile: ./Dockerfile
       args:
         - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
         - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+        # - AWS_PROFILE=${AWS_PROFILE}
+        # - AWS_ORIGINAL_ACCOUNT_ID=${AWS_ORIGINAL_ACCOUNT_ID}
+        # - AWS_SWITCH_ACCOUNT_ID=${AWS_SWITCH_ACCOUNT_ID}
+        # - AWS_SWITCH_ROLE=${AWS_SWITCH_ROLE}
+        # - AWS_MFA_SERIAL=${AWS_MFA_SERIAL}
     tty: true
     stdin_open: true
     volumes:
       - ./deploy:/app
+      # コンテナ内 sls デプロイ用
+      - ./.env:/app/src/pixta/.env
+      - ./.env:/app/src/shutterstock/.env
+      - ./.env:/app/src/receive/.env
+      - ./.env:/app/src/slack/.env
+
+  pixta:
+    build: ./deploy/src/pixta
+    volumes:
+      - ./deploy/src/pixta:/var/task
     environment:
-      - AWS_DEFAULT_REGION=ap-northeast-1
+      - NODE_ENV=local
+      - SLACK_ACCESS_TOKEN=${SLACK_ACCESS_TOKEN}
+      - CHANNEL_ID=${CHANNEL_ID}
+      - BUCKET_NAME=${BUCKET_NAME}-local
+      - LOG_LOCATION=${LOG_LOCATION}
+      - ZIP_FILE_NAME=${ZIP_FILE_NAME}
+      - PIXTA_USERNAME=${PIXTA_USERNAME}
+      - PIXTA_PASSWORD=${PIXTA_PASSWORD}
+      - PIXTA_SITEKEY=${PIXTA_SITEKEY}
+      - CAPTCHA_APIKEY=${CAPTCHA_APIKEY}
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+
     ports:
-      - 5000:5000
+      - 8081:8080
+    depends_on:
+      - minio
 
-  # crawl:
-  #   build:
-  #     dockerfile: ./docker/serverless/Dockerfile
-  #   volumes:
-  #     - ./deploy/src/node:/var/task
-  #     # ↓ nodejs/node_modules
-  #     # - ./layer:/opt
-  #   ports:
-  #     - 8080:8080
-  #   depends_on:
-  #     - minio
+  shutterstock:
+    build: ./deploy/src/shutterstock
+    volumes:
+      - ./deploy/src/shutterstock:/var/task
+    environment:
+      - NODE_ENV=local
+      - SLACK_ACCESS_TOKEN=${SLACK_ACCESS_TOKEN}
+      - CHANNEL_ID=${CHANNEL_ID}
+      - BUCKET_NAME=${BUCKET_NAME}-local
+      - LOG_LOCATION=${LOG_LOCATION}
+      - ZIP_FILE_NAME=${ZIP_FILE_NAME}
+      - SHUTTERSTOCK_USERNAME=${SHUTTERSTOCK_USERNAME}
+      - SHUTTERSTOCK_PASSWORD=${SHUTTERSTOCK_PASSWORD}
+      - CAPTCHA_APIKEY=${CAPTCHA_APIKEY}
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+    ports:
+      - 8082:8080
+    depends_on:
+      - minio
 
-  # minio:
-  #   image: minio/minio:RELEASE.2021-11-03T03-36-36Z
-  #   ports:
-  #     - 9000:9000
-  #     - 9001:9001
-  #   volumes:
-  #     - ./minio:/export
-  #   environment:
-  #     - MINIO_ACCESS_KEY=test
-  #     - MINIO_SECRET_KEY=password
-  #   command: ['server', '/export', '--console-address', ':9001']
-  #   networks:
-  #     default:
-  #       aliases:
-  #         - minio.dbg
+  receive:
+    build: ./deploy/src/receive
+    volumes:
+      - ./deploy/src/receive:/var/task
+    environment:
+      - NODE_ENV=local
+      - OWNER=${OWNER}
+      - SLACK_COMMAND=${SLACK_COMMAND}
+      - SLACK_ACCESS_TOKEN=${SLACK_ACCESS_TOKEN}
+      - CHANNEL_ID=${CHANNEL_ID}
+    ports:
+      - 8083:8080
+
+  slack:
+    build: ./deploy/src/slack
+    volumes:
+      - ./deploy/src/slack:/var/task
+    environment:
+      - NODE_ENV=local
+      - OWNER=${OWNER}
+      - SLACK_ACCESS_TOKEN=${SLACK_ACCESS_TOKEN}
+      - CHANNEL_ID=${CHANNEL_ID}
+      - BUCKET_NAME=${BUCKET_NAME}-local
+      - LOG_LOCATION=${LOG_LOCATION}
+      - ZIP_FILE_NAME=${ZIP_FILE_NAME}
+    ports:
+      - 8084:8080
+    depends_on:
+      - minio
+
+  minio:
+    image: minio/minio:RELEASE.2021-11-03T03-36-36Z
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - ./minio:/export
+    environment:
+      - MINIO_ACCESS_KEY=${MINIO_ROOT_USER}
+      - MINIO_SECRET_KEY=${MINIO_ROOT_PASSWORD}
+    command: ['server', '/export', '--console-address', ':9001']
+    networks:
+      default:
+        aliases:
+          - minio.dbg

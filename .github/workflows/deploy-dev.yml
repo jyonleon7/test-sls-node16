@@ -1,25 +1,52 @@
+# 一旦はやりたいことを自分にわかるようになぞり書きする
 name: deploy-dev
 
 on:
   push:
-    branches: 
+    branches:
       - develop
-  
+
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   deploy-dev-sls:
     runs-on: ubuntu-latest
     name: deploy
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ap-northeast-1
+
       - name: Use Node.js v16.x
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-        env:
-          SECRET_HOGE_2: ${{secrets.CHECK}}
+
       - name: Use Python 3.8
         uses: actions/setup-python@v4
-      
-      - name: pre install
-        run: make preinstall
+        with:
+          python-version: 3.8
+
+      - name: Install serverless framework
+        run: npm install -g serverless@3.28.1
+
+      - name: deploy Resources
+        run: cd deploy && make deploy-dev ARG=resource
+
+      - name: deploy receive
+        run: cd deploy && make deploy-dev ARG=receive
+
+      - name: deploy pixta
+        run: cd deploy && make deploy-dev ARG=pixta
+
+      - name: deploy shutterstock
+        run: cd deploy && make deploy-dev ARG=shutterstock
+
+      - name: deploy slack
+        run: cd deploy && make deploy-dev ARG=slack

@@ -1,6 +1,5 @@
 # 一旦はやりたいことを自分にわかるようになぞり書きする
 name: deploy-dev
-
 on:
   push:
     branches:

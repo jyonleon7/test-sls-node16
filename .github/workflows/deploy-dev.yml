@@ -40,6 +40,9 @@ jobs:
       - name: Install serverless framework
         run: npm install -g serverless@3.28.1
 
+      - name: Pre Install
+        run: make preinstall
+
       - name: deploy Resources
         run: cd deploy && make deploy-dev ARG=resource
 

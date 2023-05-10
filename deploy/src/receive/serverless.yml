@@ -33,10 +33,6 @@ custom:
 functions:
   python:
     handler: receive.handler
-    environment:
-      OWNER: ${env:OWNER}
-      SLACK_ACCESS_TOKEN: ${env:SLACK_ACCESS_TOKEN}
-      CHANNEL_ID: ${env:CHANNEL_ID}
     events:
       - http:
           method: POST

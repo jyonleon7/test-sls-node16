@@ -1,4 +1,4 @@
-service: new-imageautomation-s3
+service: ${env:SERVERLESS_SERVICE_NAME}-s3
 
 frameworkVersion: '3'
 useDotenv: true
@@ -17,8 +17,8 @@ resources:
     Bucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: new-imageautomation-store-${self:provider.stage}
+        BucketName: ${env:BUCKET_NAME}-${self:provider.stage}
     LayerBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: new-imageautomation-layers-${self:provider.stage}
+        BucketName: ${env:LAYER_BUCKET_NAME}-${self:provider.stage}

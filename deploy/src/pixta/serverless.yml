@@ -1,11 +1,11 @@
-service: new-imageautomation-pixta
+service: ${env:SERVERLESS_SERVICE_NAME}-pixta
 
 frameworkVersion: '3'
 useDotenv: true
 
 provider:
   name: aws
-  runtime: nodejs16.x
+  runtime: nodejs${env:NODE_VERSION}.x
   stage: ${opt:stage, self:custom.defaultStage}
   region: ap-northeast-1
   logRetentionInDays: 3
@@ -16,7 +16,7 @@ provider:
           Action:
             - s3:*
           Resource:
-            - arn:aws:s3:::new-imageautomation-*
+            - arn:aws:s3:::${env:SERVERLESS_SERVICE_NAME}-*
 plugins:
   - serverless-layers
 
@@ -28,13 +28,13 @@ package:
 custom:
   defaultStage: dev
   serverless-layers:
-    layersDeploymentBucket: new-imageautomation-layers-${self:provider.stage}
+    layersDeploymentBucket: ${env:LAYER_BUCKET_NAME}-${self:provider.stage}
 
 functions:
   node:
     handler: ./pixta.handler
     timeout: 600
-    runtime: nodejs16.x
+    runtime: nodejs${env:NODE_VERSION}.x
     memorySize: 1024
     environment:
       NODE_ENV: ${self:provider.stage}

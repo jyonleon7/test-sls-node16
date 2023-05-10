@@ -6,9 +6,32 @@ on:
       - develop
 
 env:
+  NODE_VERSION: 16
+  PYTHON_VERSION: 3.8
+
+  LOG_LOCATION: /tmp/log/
+  SLACK_COMMAND: /get-images
+
+  SERVERLESS_SERVICE_NAME: new-imageautomation
+  LAYER_BUCKET_NAME: new-imageautomation-layers
+  # s3 に保存するリソース名。s3 配置時にEvent Bridgeが起動する。
+  BUCKET_NAME: new-imageautomation-store
+  S3_PREFIX: tmp-images_
+  S3_SUFFIX: i.i.image.zip
+  ZIP_FILE_NAME: i.i.image.zip
+
   OWNER: ${{ secrets.OWNER }}
   SLACK_ACCESS_TOKEN: ${{ secrets.SLACK_ACCESS_TOKEN }}
   CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+  # ここから下はまだsecrets に登録していない
+  SHUTTERSTOCK_USERNAME: ${{ secrets.SHUTTERSTOCK_USERNAME }}
+  SHUTTERSTOCK_PASSWORD: ${{ secrets.SHUTTERSTOCK_PASSWORD }}
+  PIXTA_USERNAME: ${{ secrets.PIXTA_USERNAME }}
+  PIXTA_PASSWORD: ${{ secrets.PIXTA_PASSWORD }}
+  PIXTA_SITEKEY: ${{ secrets.PIXTA_SITEKEY }}
+  CAPTCHA_APIKEY: ${{ secrets.CAPTCHA_APIKEY }}
+  # AWS_SECURITY_GROUP_ID: ${{ secrets.AWS_SECURITY_GROUP_ID }}
+  # AWS_SUBNET_ID: ${{ secrets.AWS_SUBNET_ID }}
 
 permissions:
   id-token: write
@@ -27,15 +50,15 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ap-northeast-1
 
-      - name: Use Node.js v16.x
+      - name: Use Node.js v${{ env.NODE_VERSION }}.x
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: ${{ env.NODE_VERSION }}.x
 
-      - name: Use Python 3.8
+      - name: Use Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install serverless framework
         run: npm install -g serverless@3.28.1

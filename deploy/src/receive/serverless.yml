@@ -1,11 +1,11 @@
-service: new-imageautomation-receive
+service: ${env:SERVERLESS_SERVICE_NAME}-receive
 
 frameworkVersion: '3'
 useDotenv: true
 
 provider:
   name: aws
-  runtime: python3.8
+  runtime: python${env:PYTHON_VERSION}
   stage: ${opt:stage, self:custom.defaultStage}
   region: ap-northeast-1
   logRetentionInDays: 3
@@ -28,7 +28,7 @@ package:
 custom:
   defaultStage: dev
   serverless-layers:
-    layersDeploymentBucket: new-imageautomation-layers-${self:provider.stage}
+    layersDeploymentBucket: ${env:LAYER_BUCKET_NAME}-${self:provider.stage}
 
 functions:
   python:
@@ -38,11 +38,11 @@ functions:
           method: POST
           path: /receive
     timeout: 600
-    runtime: python3.8
+    runtime: python${env:PYTHON_VERSION}
     memorySize: 1024
     environment:
       NODE_ENV: ${self:provider.stage}
       OWNER: ${env:OWNER}
-      SLACK_COMMAND: /get-images
+      SLACK_COMMAND: ${env:SLACK_COMMAND}
       SLACK_ACCESS_TOKEN: ${env:SLACK_ACCESS_TOKEN}
       CHANNEL_ID: ${env:CHANNEL_ID}

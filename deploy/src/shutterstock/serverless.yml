@@ -1,11 +1,11 @@
-service: new-imageautomation-shutterstock
+service: ${env:SERVERLESS_SERVICE_NAME}-shutterstock
 
 frameworkVersion: '3'
 useDotenv: true
 
 provider:
   name: aws
-  runtime: nodejs16.x
+  runtime: nodejs${env:NODE_VERSION}.x
   stage: ${opt:stage, self:custom.defaultStage}
   region: ap-northeast-1
   logRetentionInDays: 3
@@ -22,14 +22,14 @@ package:
 custom:
   defaultStage: dev
   serverless-layers:
-    layersDeploymentBucket: new-imageautomation-layers-${self:provider.stage}
+    layersDeploymentBucket: ${env:LAYER_BUCKET_NAME}-${self:provider.stage}
   installCommand: npm install --legacy-peer-deps
   dependenciesPath: ./package-lock.json
 functions:
   node:
     handler: ./shutterstock.handler
     timeout: 600
-    runtime: nodejs16.x
+    runtime: nodejs${env:NODE_VERSION}.x
     memorySize: 1024
     environment:
       NODE_ENV: ${self:provider.stage}

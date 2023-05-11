@@ -84,6 +84,3 @@ jobs:
         run: echo $MY_VARIABLE1
       - name: check-2
         run: echo $MY_VARIABLE2
-
-imports:
-  - path: common.yml

@@ -15,13 +15,29 @@ services:
         # - AWS_MFA_SERIAL=${AWS_MFA_SERIAL}
     tty: true
     stdin_open: true
+
+    environment:
+      - NODE_VERSION=16
+      - PYTHON_VERSION=3.8
+      - LOG_LOCATION=${LOG_LOCATION}
+      - SLACK_COMMAND=${SLACK_COMMAND}
+      - SERVERLESS_SERVICE_NAME=${SERVERLESS_SERVICE_NAME}
+      - LAYER_BUCKET_NAME=${LAYER_BUCKET_NAME}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - S3_PREFIX=${S3_PREFIX}
+      - S3_SUFFIX=${ZIP_FILE_NAME}
+      - ZIP_FILE_NAME=${ZIP_FILE_NAME}
+      - OWNER=${OWNER}
+      - SLACK_ACCESS_TOKEN=${SLACK_ACCESS_TOKEN}
+      - CHANNEL_ID=${CHANNEL_ID}
+      - SHUTTERSTOCK_USERNAME=${SHUTTERSTOCK_USERNAME}
+      - SHUTTERSTOCK_PASSWORD=${SHUTTERSTOCK_PASSWORD}
+      - PIXTA_USERNAME=${PIXTA_USERNAME}
+      - PIXTA_PASSWORD=${PIXTA_PASSWORD}
+      - PIXTA_SITEKEY=${PIXTA_SITEKEY}
+      - CAPTCHA_APIKEY=${CAPTCHA_APIKEY}
     volumes:
       - ./deploy:/app
-      # コンテナ内 sls デプロイ用
-      - ./.env:/app/src/pixta/.env
-      - ./.env:/app/src/shutterstock/.env
-      - ./.env:/app/src/receive/.env
-      - ./.env:/app/src/slack/.env
 
   pixta:
     build: ./deploy/src/pixta
@@ -40,7 +56,6 @@ services:
       - CAPTCHA_APIKEY=${CAPTCHA_APIKEY}
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
-
     ports:
       - 8081:8080
     depends_on:

@@ -46,8 +46,8 @@ RUN sls config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS
 #     echo "region=ap-northeast-1" >> ~/.aws/config && \
 #     echo "role_arn=arn:aws:iam::${AWS_SWITCH_ACCOUNT_ID}:role/${AWS_SWITCH_ROLE}" >> ~/.aws/config && \
 #     echo "mfa_serial=arn:aws:iam::${AWS_ORIGINAL_ACCOUNT_ID}:mfa/${AWS_MFA_SERIAL}" >> ~/.aws/config
-# RUN export AWS_PROFILE=${AWS_PROFILE}
 # RUN export AWS_SDK_LOAD_CONFIG=1
+# RUN export AWS_PROFILE=${AWS_PROFILE}
 
 WORKDIR /app
 

@@ -29,8 +29,6 @@ env:
   PIXTA_PASSWORD: ${{ secrets.PIXTA_PASSWORD }}
   PIXTA_SITEKEY: ${{ secrets.PIXTA_SITEKEY }}
   CAPTCHA_APIKEY: ${{ secrets.CAPTCHA_APIKEY }}
-  # AWS_SECURITY_GROUP_ID: ${{ secrets.AWS_SECURITY_GROUP_ID }}
-  # AWS_SUBNET_ID: ${{ secrets.AWS_SUBNET_ID }}
 
   MY_VARIABLE1: "This will be overridden"
 

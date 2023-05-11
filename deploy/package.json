@@ -9,5 +9,8 @@
     "serverless-layers": "^2.6.1"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "serverless-s3-remover": "^0.6.0"
+  }
 }

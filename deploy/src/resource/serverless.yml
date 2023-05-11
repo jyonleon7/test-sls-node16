@@ -11,6 +11,10 @@ provider:
 
 custom:
   defaultStage: dev
+  remover:
+     buckets:
+       - ${env:BUCKET_NAME}-${self:provider.stage}
+       - ${env:LAYER_BUCKET_NAME}-${self:provider.stage}
 
 resources:
   Resources:

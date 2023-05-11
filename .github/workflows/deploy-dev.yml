@@ -65,7 +65,7 @@ jobs:
       - name: Pre Install
         run: make preinstall
 
-      - name: deploy Resources
+      - name: deploy resources
         run: cd deploy && make deploy-dev ARG=resource
 
       - name: deploy receive

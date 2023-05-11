@@ -65,6 +65,9 @@ jobs:
       - name: Pre Install
         run: make preinstall
 
+      - name: remove resources
+        run: cd deploy && make remove-dev ARG=resource
+
       - name: remove receive
         run: cd deploy && make remove-dev ARG=receive
 

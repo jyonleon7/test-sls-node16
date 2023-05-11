@@ -23,7 +23,6 @@ env:
   OWNER: ${{ secrets.OWNER }}
   SLACK_ACCESS_TOKEN: ${{ secrets.SLACK_ACCESS_TOKEN }}
   CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
-  # ここから下はまだsecrets に登録していない
   SHUTTERSTOCK_USERNAME: ${{ secrets.SHUTTERSTOCK_USERNAME }}
   SHUTTERSTOCK_PASSWORD: ${{ secrets.SHUTTERSTOCK_PASSWORD }}
   PIXTA_USERNAME: ${{ secrets.PIXTA_USERNAME }}
@@ -32,6 +31,8 @@ env:
   CAPTCHA_APIKEY: ${{ secrets.CAPTCHA_APIKEY }}
   # AWS_SECURITY_GROUP_ID: ${{ secrets.AWS_SECURITY_GROUP_ID }}
   # AWS_SUBNET_ID: ${{ secrets.AWS_SUBNET_ID }}
+
+  MY_VARIABLE1: "This will be overridden"
 
 permissions:
   id-token: write
@@ -80,3 +81,11 @@ jobs:
 
       - name: deploy slack
         run: cd deploy && make deploy-dev ARG=slack
+
+      - name: check-1
+        run: echo $MY_VARIABLE1
+      - name: check-2
+        run: echo $MY_VARIABLE2
+
+imports:
+  - path: common.yml

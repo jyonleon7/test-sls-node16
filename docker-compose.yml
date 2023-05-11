@@ -15,13 +15,31 @@ services:
         # - AWS_MFA_SERIAL=${AWS_MFA_SERIAL}
     tty: true
     stdin_open: true
+
+    environment:
+      - NODE_VERSION=16
+      - PYTHON_VERSION=3.8
+      - LOG_LOCATION=/tmp/log/
+      - SLACK_COMMAND=${SLACK_COMMAND}
+      - SERVERLESS_SERVICE_NAME=new-imageautomation
+      - LAYER_BUCKET_NAME=new-imageautomation-layers
+      - BUCKET_NAME=${BUCKET_NAME}
+      - S3_PREFIX=${S3_PREFIX}
+      - S3_SUFFIX=${ZIP_FILE_NAME}
+      - ZIP_FILE_NAME=${ZIP_FILE_NAME}
+      - OWNER=${OWNER}
+      - SLACK_ACCESS_TOKEN=${SLACK_ACCESS_TOKEN}
+      - CHANNEL_ID=${CHANNEL_ID}
+      - SHUTTERSTOCK_USERNAME=${SHUTTERSTOCK_USERNAME}
+      - SHUTTERSTOCK_PASSWORD=${SHUTTERSTOCK_PASSWORD}
+      - PIXTA_USERNAME=${PIXTA_USERNAME}
+      - PIXTA_PASSWORD=${PIXTA_PASSWORD}
+      - PIXTA_SITEKEY=${PIXTA_SITEKEY}
+      - CAPTCHA_APIKEY=${CAPTCHA_APIKEY}
+      # - AWS_SECURITY_GROUP_ID=${AWS_SECURITY_GROUP_ID}
+      # - AWS_SUBNET_ID=${AWS_SUBNET_ID}
     volumes:
       - ./deploy:/app
-      # コンテナ内 sls デプロイ用
-      - ./.env:/app/src/pixta/.env
-      - ./.env:/app/src/shutterstock/.env
-      - ./.env:/app/src/receive/.env
-      - ./.env:/app/src/slack/.env
 
   pixta:
     build: ./deploy/src/pixta
@@ -105,8 +123,8 @@ services:
     volumes:
       - ./minio:/export
     environment:
-      - MINIO_ACCESS_KEY=${MINIO_ROOT_USER}
-      - MINIO_SECRET_KEY=${MINIO_ROOT_PASSWORD}
+      - MINIO_ACCESS_KEY=local-user
+      - MINIO_SECRET_KEY=local-user
     command: ['server', '/export', '--console-address', ':9001']
     networks:
       default:

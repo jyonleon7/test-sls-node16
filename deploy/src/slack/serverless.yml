@@ -42,5 +42,5 @@ functions:
           event: s3:ObjectCreated:*
           rules:
             - prefix: ${env:S3_PREFIX}
-            - suffix: ${env:S3_SUFFIX}
+            - suffix: ${env:ZIP_FILE_NAME}
           existing: true

@@ -1,5 +1,0 @@
-defaults:
-  run:
-    env:
-      MY_VARIABLE1: "Hello World"
-      MY_VARIABLE2: "hoge hoge"

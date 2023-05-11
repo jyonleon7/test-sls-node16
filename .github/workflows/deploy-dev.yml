@@ -32,8 +32,6 @@ env:
   # AWS_SECURITY_GROUP_ID: ${{ secrets.AWS_SECURITY_GROUP_ID }}
   # AWS_SUBNET_ID: ${{ secrets.AWS_SUBNET_ID }}
 
-  MY_VARIABLE1: "This will be overridden"
-
 permissions:
   id-token: write
   contents: read
@@ -81,11 +79,3 @@ jobs:
 
       - name: deploy slack
         run: cd deploy && make deploy-dev ARG=slack
-
-      - name: check-1
-        run: echo $MY_VARIABLE1
-      - name: check-2
-        run: echo $MY_VARIABLE2
-
-imports:
-  - path: common.yml

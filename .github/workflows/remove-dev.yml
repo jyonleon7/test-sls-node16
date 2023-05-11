@@ -1,9 +1,9 @@
 # 一旦はやりたいことを自分にわかるようになぞり書きする
-name: deploy-dev
+name: remove-dev
 on:
   push:
     branches:
-      - develop-remove
+      - remove-develop
 
 env:
   NODE_VERSION: 16
@@ -37,9 +37,9 @@ permissions:
   contents: read
 
 jobs:
-  deploy-dev-sls:
+  remove-dev-sls:
     runs-on: ubuntu-latest
-    name: deploy
+    name: remove
     steps:
       - uses: actions/checkout@v3
 
@@ -65,14 +65,14 @@ jobs:
       - name: Pre Install
         run: make preinstall
 
-      - name: deploy receive
+      - name: remove receive
         run: cd deploy && make remove-dev ARG=receive
 
-      - name: deploy pixta
+      - name: remove pixta
         run: cd deploy && make remove-dev ARG=pixta
 
-      - name: deploy shutterstock
+      - name: remove shutterstock
         run: cd deploy && make remove-dev ARG=shutterstock
 
-      - name: deploy slack
+      - name: remove slack
         run: cd deploy && make remove-dev ARG=slack
